@@ -40,7 +40,7 @@ def create_entry(country, year, month_or_season, reading_type, reading, entry):
 def curate_data(country, year, reading_type, entry):
     for col in columns:
         month_or_season = col
-        reading = entry[col]
+        reading = entry[col.lower()]
         create_entry(country, year, month_or_season, reading_type, reading, entry)
 
 
@@ -48,7 +48,7 @@ def curate_latest_data(country, year, reading_type, entry):
     month = now.month
     for i in range(month - 1):
         month_or_season = columns[i]
-        reading = entry[columns[i]]
+        reading = entry[columns[i].lower()]
         create_entry(country, year, month_or_season, reading_type, reading, entry)
 
     index = i + 1
@@ -72,14 +72,12 @@ def loadDatabase(countries=COUNTRIES, reading_types=READING_TYPES):
             url = base_url % (reading_type, country)
             response = StringIO(requests.get(url).text)
 
-            data = pd.read_csv(response, skiprows=6, delim_whitespace=True)
+            data = pd.read_csv(response, skiprows=5, delim_whitespace=True)
             entries = data.iterrows()
-
             for entry in entries:
-                print(entry)
                 entry = entry[1]
 
-                year = int(entry['Year'])
+                year = int(entry['year'])
                 if (year == now.year):
                     curate_latest_data(country, year, reading_type, entry)
                 else:

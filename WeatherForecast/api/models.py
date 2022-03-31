@@ -13,3 +13,6 @@ class WeatherData(models.Model):
                             "month_or_season",
                             "year",
                             "reading_type"))
+
+    def __str__(self):
+        return f"{self.country} - {self.year}"
